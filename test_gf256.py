@@ -6,7 +6,7 @@
     :license: BSD, see LICENSE.rst for details
 """
 import pytest
-from hypothesis import given, assume
+from hypothesis import assume, given
 from hypothesis.strategies import integers
 
 from gf256 import GF256

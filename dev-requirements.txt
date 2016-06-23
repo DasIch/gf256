@@ -6,3 +6,4 @@ Sphinx>=1.4.4
 flake8>=2.5.5
 pytest>=2.9.2
 hypothesis>=3.4.0
+isort>=4.2.5

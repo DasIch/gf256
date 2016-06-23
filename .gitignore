@@ -2,3 +2,5 @@
 .tox/
 *.egg-info/
 docs/_build/
+.cache/
+.hypothesis/

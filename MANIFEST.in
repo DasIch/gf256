@@ -1,6 +1,7 @@
 include *.rst
 include *.txt
 include tox.ini
+include *.py # test_*.py
 
 recursive-include docs *.py
 recursive-include docs *.rst

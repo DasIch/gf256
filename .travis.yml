@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.5"
+  - "3.5-dev"
+  - "nightly"
+
+install:
+  - pip install -r dev-requirements.txt
+
+script:
+  py.test
+  python setup.py check --strict --metadata --restructuredtext
+  check-manifest
+  sphinx-build -W -b html docs docs/_build/html
+  flake8 .
+  isort --check-only --diff --recursive .

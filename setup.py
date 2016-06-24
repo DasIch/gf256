@@ -12,10 +12,11 @@ from setuptools import setup
 
 
 PROJECT_PATH = Path(__file__).parent.absolute()
+PACKAGE_PATH = PROJECT_PATH / 'gf256'
 
 
 def get_version():
-    with (PROJECT_PATH / 'gf256.py').open(encoding='utf-8') as module:
+    with (PACKAGE_PATH / '__init__.py').open(encoding='utf-8') as module:
         for line in module:
             match = re.match(r"__version__ = '([^']*)'", line)
             if match:
@@ -36,5 +37,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython'
     ],
-    py_modules=['gf256']
+    packages=['gf256']
 )

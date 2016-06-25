@@ -76,7 +76,7 @@ ffibuilder.set_source('gf256._speedups', """
         }
         return old_t;
     }
-""")
+""", extra_compile_args=['-std=c99'])
 
 
 if __name__ == '__main__':

@@ -4,3 +4,7 @@
 docs/_build/
 .cache/
 .hypothesis/
+.eggs/
+*.c
+*.so
+*.o

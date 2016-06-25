@@ -5,6 +5,10 @@
     :copyright: 2016 by Daniel Neuhäuser
     :license: BSD, see LICENSE.rst for details
 """
+try:
+    from gf256._speedups import lib as _speedups
+except ImportError:
+    _speedups = None
 
 
 #: The version as a string.
@@ -24,6 +28,8 @@ def _polymul(a, b):
         b <<= 1
         a >>= 1
     return product
+if _speedups:
+    _polymul = _speedups.polymul  # noqa
 
 
 def _polydiv(dividend, divisor):
@@ -32,6 +38,9 @@ def _polydiv(dividend, divisor):
     """
     if divisor == 0:
         raise ZeroDivisionError()
+
+    if _speedups is not None:
+        return _speedups.polydiv(dividend, divisor)
 
     quotient = 0
     remainder = dividend
@@ -97,6 +106,12 @@ class GF256:
 
     def __mul__(self, other):
         if isinstance(other, GF256):
+            if _speedups:
+                return self.__class__(_speedups.polymulmod(
+                    self.n,
+                    other.n,
+                    self.irreducible_polynomial
+                ))
             # We multiply using binary multiplication modulo
             # :attr:`irreducible_polynomial`.
             #
@@ -156,6 +171,11 @@ class GF256:
         """
         if self == self.__class__(0):
             raise ZeroDivisionError()
+
+        if _speedups:
+            return self.__class__(
+                _speedups.modinverse(self.n, self.irreducible_polynomial)
+            )
 
         # We use a variant of the *extended Euclidean algorithm* to find the
         # multiplicative inverse.

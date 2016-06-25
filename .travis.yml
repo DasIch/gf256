@@ -4,6 +4,10 @@ python:
   - "3.5-dev"
   - "nightly"
 
+env:
+  - GF256_WITHOUT_SPEEDUPS=0
+  - GF256_WITHOUT_SPEEDUPS=1
+
 install:
   - pip install -r dev-requirements.txt
 

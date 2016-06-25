@@ -5,6 +5,7 @@
     :copyright: 2016 by Daniel Neuhäuser
     :license: BSD, see LICENSE.rst for details
 """
+import os
 import re
 from pathlib import Path
 
@@ -23,6 +24,14 @@ def get_version():
                 return match.group(1)
     raise ValueError('__version__ not found')
 
+if os.environ.get('GF256_WITHOUT_SPEEDUPS', '1') == '1':
+    keywords = {}
+else:
+    keywords = {
+        'setup_requires': ['cffi>=1.7.0'],
+        'install_requires': ['cffi>=1.7.0'],
+        'cffi_modules': ['gf256/speedups_build.py:ffibuilder'],
+    }
 
 setup(
     name='GF256',
@@ -37,5 +46,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython'
     ],
-    packages=['gf256']
+    packages=['gf256'],
+    **keywords
 )

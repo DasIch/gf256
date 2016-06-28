@@ -3,6 +3,7 @@ include *.txt
 include tox.ini
 include .isort.cfg
 include *.py # test_*.py
+include *.yml
 
 recursive-include docs *.py
 recursive-include docs *.rst

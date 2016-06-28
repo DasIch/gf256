@@ -1,0 +1,22 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python35"
+      GF256_WITHOUT_SPEEDUPS: "0"
+    - PYTHON: "C:\\Python35"
+      GF256_WITHOUT_SPEEDUPS: "1"
+
+install:
+  - "%PYTHON%\\python.exe -m pip install -U pip"
+  - "%PYTHON%\\python.exe -m pip install -r dev-requirements.txt"
+  - '%PYTHON%\\python.exe -c "import gf256; print(gf256._speedups)"'
+
+# Deactivate automated build system.
+build: off
+
+test_script:
+  - "%PYTHON%\\Scripts\\py.test.exe"
+  - "%PYTHON%\\python.exe setup.py check --strict --metadata --restructuredtext"
+  - "%PYTHON%\\Scripts\\check-manifest.exe"
+  - "%PYTHON%\\Scripts\\sphinx-build.exe -W -b html docs docs/_build/html"
+  - "%PYTHON%\\Scripts\\flake8.exe ."
+  - "%PYTHON%\\Scripts\\isort.exe --check-only --diff --recursive ."

@@ -5,11 +5,17 @@ Contributing
 Setting up a Development Environment
 ------------------------------------
 
-1. Clone the repository.
+1. Clone the repository_::
+
+     git clone https://github.com/DasIch/gf256.git
+
 2. Create a virtual environment.
 3. Install development dependencies::
 
      pip install -r dev-requirements
+
+
+.. _repository: https://github.com/DasIch/gf256
 
 
 Running Tests

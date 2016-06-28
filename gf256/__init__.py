@@ -81,7 +81,7 @@ class GF256:
         """
         Returns a string representation of the polynomial:
 
-        >>> GF256(0b00011011)
+        >>> GF256(0b00011011).to_polynomial_string()
         'x**4 + x**3 + x + 1'
         """
         products = [

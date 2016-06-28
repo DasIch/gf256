@@ -20,6 +20,21 @@ being built.
 .. _CFFI: https://cffi.readthedocs.io/
 
 
+API Reference
+-------------
+
+.. module:: gf256
+
+.. autodata:: gf256.__version__
+   :annotation: = 'major.minor.bugfix'
+
+.. autodata:: gf256.__version_info__
+   :annotation: = (major, minor, bugfix)
+
+.. autoclass:: gf256.GF256
+   :members:
+
+
 Additional Information
 ----------------------
 

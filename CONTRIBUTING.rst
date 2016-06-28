@@ -12,7 +12,7 @@ Setting up a Development Environment
 2. Create a virtual environment.
 3. Install development dependencies::
 
-     pip install -r dev-requirements
+     pip install -r dev-requirements.txt
 
 
 .. _repository: https://github.com/DasIch/gf256

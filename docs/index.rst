@@ -20,6 +20,40 @@ being built.
 .. _CFFI: https://cffi.readthedocs.io/
 
 
+Usage
+-----
+
+The library provides a class :class:`~gf256.GF256` which you can use to
+represent elements of `GF(2 ** 8)`.
+
+>>> from gf256 import GF256
+>>> GF256(1)
+GF256(0b00000001)
+
+You can perform arithmetic on `GF256` objects like you can on other numbers.
+
+>>> GF256(1) + GF256(2)
+GF256(0b00000011)
+>>> GF256(1) - GF256(2)
+GF256(0b00000011)
+>>> GF256(2) * GF256(3)
+GF256(0b00000110)
+>>> GF256(6) / GF256(3)
+GF256(0b00000010)
+
+In addition to the special methods required for arithmetic, `GF256` provides
+special methods for coercion to integers and hashing:
+
+>>> int(GF256(1))
+1
+>>> hash(GF256(2))
+2
+
+The latter allows you to use `GF256` objects as keys in dictionaries or as
+elements of a set. Of course equality and inequality comparisons are also
+possible.
+
+
 API Reference
 -------------
 

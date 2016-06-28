@@ -18,5 +18,6 @@ test_script:
   - "%PYTHON%\\python.exe setup.py check --strict --metadata --restructuredtext"
   - "%PYTHON%\\Scripts\\check-manifest.exe"
   - "%PYTHON%\\Scripts\\sphinx-build.exe -W -b html docs docs/_build/html"
+  - "%PYTHON%\\Scripts\\sphinx-build.exe -W -b doctest docs docs/_build/doctest"
   - "%PYTHON%\\Scripts\\flake8.exe ."
   - "%PYTHON%\\Scripts\\isort.exe --check-only --diff --recursive ."

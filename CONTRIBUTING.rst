@@ -21,9 +21,24 @@ Setting up a Development Environment
 Running Tests
 -------------
 
-Run tox to make sure everything works correctly on your machine::
+We use a variety of tools to test the projects. You can run all of them locally
+with tox_::
 
   tox
+
+You should run this at least once before committing but it takes an
+inconvenient amount of time especially for TDD. Use pytest_ to only run the
+unit tests::
+
+  py.test
+
+We also use two CI platforms `Travis CI`_ and `AppVeyor`_ to test everything on
+Linux and Windows respectively.
+
+.. _tox: http://tox.readthedocs.io/
+.. _pytest: http://pytest.org/
+.. _Travis CI: https://travis-ci.org/DasIch/gf256
+.. _AppVeyor: https://ci.appveyor.com/project/DasIch/gf256
 
 
 Building the Documentation

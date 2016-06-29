@@ -20,7 +20,8 @@ ffibuilder.cdef("""
 ffibuilder.set_source('gf256._speedups', """
     uint32_t polymulmod(uint32_t a, uint32_t b, uint32_t modulus) {
         uint32_t product = 0;
-        for (int i = 0; i < 8; i++) {
+        int i;
+        for (i = 0; i < 8; i++) {
             product ^= (a & 1) * b;
             b = (b << 1) ^ ((b >> 7) * modulus);
             a >>= 1;
@@ -76,7 +77,7 @@ ffibuilder.set_source('gf256._speedups', """
         }
         return old_t;
     }
-""", extra_compile_args=['-std=c99'])
+""")
 
 
 if __name__ == '__main__':

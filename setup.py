@@ -24,6 +24,13 @@ def get_version():
                 return match.group(1)
     raise ValueError('__version__ not found')
 
+
+def get_readme():
+    # Required because Python < 3.5 doesn't have .read_text()
+    with (PROJECT_PATH / 'README.rst').open(encoding='utf-8') as readme:
+        return readme.read()
+
+
 if os.environ.get('GF256_WITHOUT_SPEEDUPS', '1') == '1':
     keywords = {}
 else:
@@ -37,12 +44,13 @@ setup(
     name='GF256',
     version=get_version(),
     description="An implementation of GF(2**8)",
-    long_description=(PROJECT_PATH / 'README.rst').read_text(),
+    long_description=get_readme(),
     url='https://github.com/DasIch/gf256/',
     author='Daniel Neuhäuser',
     author_email='ich@danielneuhaeuser.de',
     classifiers=[
         'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython'
     ],

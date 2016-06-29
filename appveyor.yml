@@ -1,5 +1,9 @@
 environment:
   matrix:
+    - PYTHON: "C:\\Python34"
+      GF256_WITHOUT_SPEEDUPS: "0"
+    - PYTHON: "C:\\Python34"
+      GF256_WITHOUT_SPEEDUPS: "1"
     - PYTHON: "C:\\Python35"
       GF256_WITHOUT_SPEEDUPS: "0"
     - PYTHON: "C:\\Python35"

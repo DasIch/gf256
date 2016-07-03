@@ -90,6 +90,15 @@ class _GF256Base:
             return self.__class__(self.n ^ other.n)
         return NotImplemented
 
+    def __pow__(self, other):
+        # modulo not supported
+        if isinstance(other, _GF256Base):
+            power = self.__class__(1)
+            for _ in range(int(other)):
+                power *= self
+            return power
+        return NotImplemented
+
     def __int__(self):
         return self.n
 
@@ -109,9 +118,9 @@ class GF256(_GF256Base):
     """
     Represents an element in GF(2 ** 8).
 
-    You can do arithmetic using `+`, `-`, `*` and `/`. Additionally `==` and
-    `!=` operations are implemented. GF256 objects are hashable and can be used
-    as keys. Use `int()` to turn an object into an integer.
+    You can do arithmetic using `+`, `-`, `*`, `/` and `**`. Additionally `==`
+    and `!=` operations are implemented. GF256 objects are hashable and can be
+    used as keys. Use `int()` to turn an object into an integer.
     """
 
     #: The irreducible polynomial `x**8 + x**4 + x**3 + x + 1` used as a

@@ -190,6 +190,18 @@ def create_test_class(GF256):
                 a / GF256(0)
 
         @given(gf256s, gf256s)
+        def test_pow(self, a, b):
+            power_through_op = a ** b
+            power_manually = GF256(1)
+            for _ in range(int(b)):
+                power_manually *= a
+            assert power_through_op == power_manually
+
+        @given(gf256s)
+        def test_pow_of_one(self, a):
+            assert a ** GF256(0) == GF256(1)
+
+        @given(gf256s, gf256s)
         def test_equality(self, a, b):
             if a == b:
                 assert int(a) == int(b)

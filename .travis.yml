@@ -8,9 +8,20 @@ python:
 env:
   - GF256_WITHOUT_SPEEDUPS=0
   - GF256_WITHOUT_SPEEDUPS=1
+  - REQUIREMENTS=lowest
+  - REQUIREMENTS=release
+  - REQUIREMENTS=dev
 
 install:
   - pip install -r dev-requirements.txt
+  - if [ "$REQUIREMENTS" == "lowest" ]; then
+      pip install cffi==1.7.0;
+    elif [ "$REQUIREMENTS" == "release" ]; then
+      pip install cffi>=1.7.0;
+    elif [ "$REQUIREMENTS" == "dev" ]; then
+      pip install -e hg+https://bitbucket.org/cffi/cffi#egg=cffi;
+    fi
+
 
 script:
   - py.test

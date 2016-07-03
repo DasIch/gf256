@@ -1,17 +1,32 @@
 environment:
   matrix:
     - PYTHON: "C:\\Python34"
-      GF256_WITHOUT_SPEEDUPS: "0"
+      REQUIREMENTS: "lowest"
+    - PYTHON: "C:\\Python34"
+      REQUIREMENTS: "release"
+    - PYTHON: "C:\\Python34"
+      REQUIREMENTS: "dev"
+    - PYTHON: "C:\\Python35"
+      REQUIREMENTS: "lowest"
+    - PYTHON: "C:\\Python35"
+      REQUIREMENTS: "release"
+    - PYTHON: "C:\\Python35"
+      REQUIREMENTS: "dev"
     - PYTHON: "C:\\Python34"
       GF256_WITHOUT_SPEEDUPS: "1"
-    - PYTHON: "C:\\Python35"
-      GF256_WITHOUT_SPEEDUPS: "0"
     - PYTHON: "C:\\Python35"
       GF256_WITHOUT_SPEEDUPS: "1"
 
 install:
   - "%PYTHON%\\python.exe -m pip install -U pip"
   - "%PYTHON%\\python.exe -m pip install -r dev-requirements.txt"
+  - ps: if ($REQUIREMENTS -eq "lowest") {
+          %PYTHON%\\python.exe -m pip install cffi==1.7.0
+        } elseif ($REQUIREMENTS -eq "release") {
+          %PYTHON%\\python.exe -m pip install cffi>=1.7.0
+        } elseif ($REQUIREMENTS -eq "dev") {
+          %PYTHON%\\python.exe -m pip install -e hg+https://bitbucket.org/cffi/cffi#egg=cffi
+        } else { }
   - '%PYTHON%\\python.exe -c "import gf256; print(gf256._speedups)"'
 
 # Deactivate automated build system.

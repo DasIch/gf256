@@ -57,21 +57,7 @@ def _polydiv(dividend, divisor):
     return quotient
 
 
-class GF256:
-    """
-    Represents an element in GF(2 ** 8).
-
-    You can do arithmetic using `+`, `-`, `*` and `/`. Additionally `==` and
-    `!=` operations are implemented. GF256 objects are hashable and can be used
-    as keys. Use `int()` to turn an object into an integer.
-    """
-
-    #: The irreducible polynomial `x**8 + x**4 + x**3 + x + 1` used as a
-    #: modulus for multiplication.
-    #:
-    #: This particular polynomial was chosen due to it's use in AES.
-    irreducible_polynomial = 0b100011011
-
+class _GF256Base:
     def __init__(self, n):
         if not 0 <= n < 256:
             raise ValueError('{} is not in range(0, 256)'.format(n))
@@ -95,14 +81,44 @@ class GF256:
         return ' + '.join(products)
 
     def __add__(self, other):
-        if isinstance(other, GF256):
+        if isinstance(other, _GF256Base):
             return self.__class__(self.n ^ other.n)
         return NotImplemented
 
     def __sub__(self, other):
-        if isinstance(other, GF256):
+        if isinstance(other, _GF256Base):
             return self.__class__(self.n ^ other.n)
         return NotImplemented
+
+    def __int__(self):
+        return self.n
+
+    def __hash__(self):
+        return self.n
+
+    def __eq__(self, other):
+        if isinstance(other, _GF256Base):
+            return self.n == other.n
+        return NotImplemented
+
+    def __repr__(self):
+        return '{0.__class__.__qualname__}(0b{0.n:0>8b})'.format(self)
+
+
+class GF256(_GF256Base):
+    """
+    Represents an element in GF(2 ** 8).
+
+    You can do arithmetic using `+`, `-`, `*` and `/`. Additionally `==` and
+    `!=` operations are implemented. GF256 objects are hashable and can be used
+    as keys. Use `int()` to turn an object into an integer.
+    """
+
+    #: The irreducible polynomial `x**8 + x**4 + x**3 + x + 1` used as a
+    #: modulus for multiplication.
+    #:
+    #: This particular polynomial was chosen due to it's use in AES.
+    irreducible_polynomial = 0b100011011
 
     def __mul__(self, other):
         if isinstance(other, GF256):
@@ -223,17 +239,3 @@ class GF256:
         # irreducible.
         assert old_r == 1  # old_r is the gcd
         return self.__class__(abs(old_t))
-
-    def __int__(self):
-        return self.n
-
-    def __hash__(self):
-        return self.n
-
-    def __eq__(self, other):
-        if isinstance(other, GF256):
-            return self.n == other.n
-        return NotImplemented
-
-    def __repr__(self):
-        return '{0.__class__.__qualname__}(0b{0.n:0>8b})'.format(self)

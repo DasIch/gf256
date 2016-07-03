@@ -66,6 +66,7 @@ API Reference
    :annotation: = (major, minor, bugfix)
 
 .. autoclass:: gf256.GF256
+   :inherited-members:
    :members:
 
 

@@ -75,5 +75,6 @@ Additional Information
 .. toctree::
    :maxdepth: 2
 
+   changelog
    contributing
    license

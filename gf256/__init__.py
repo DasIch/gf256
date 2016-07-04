@@ -287,6 +287,8 @@ class GF256LT(_GF256Base):
     def _multiplicative_inverse(self):
         if self.n == 0:
             raise ZeroDivisionError()
+        if _speedups:
+            return self.__class__(_speedups.modinverselt(self.n))
         return self.__class__(
             self.exponentiation_table[
                 (-self.logarithm_table[self.n - 1]) % 255

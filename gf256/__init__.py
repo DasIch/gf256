@@ -136,12 +136,6 @@ class GF256(_GF256Base):
 
     def __mul__(self, other):
         if isinstance(other, GF256):
-            if _speedups:
-                return self.__class__(_speedups.polymulmod(
-                    self.n,
-                    other.n,
-                    self.irreducible_polynomial
-                ))
             # We multiply using binary multiplication modulo
             # :attr:`irreducible_polynomial`.
             #
@@ -184,6 +178,14 @@ class GF256(_GF256Base):
             return self.__class__(product)
         return NotImplemented
 
+    if _speedups:
+        def __mul__(self, other):  # noqa
+            if isinstance(other, GF256):
+                return self.__class__(_speedups.polymulmod(
+                    self.n, other.n, self.irreducible_polynomial
+                ))
+            return NotImplemented
+
     def _multiplicative_inverse(self):
         """
         Returns the multiplicative inverse that is the element that, if
@@ -196,11 +198,6 @@ class GF256(_GF256Base):
         """
         if self == self.__class__(0):
             raise ZeroDivisionError()
-
-        if _speedups:
-            return self.__class__(
-                _speedups.modinverse(self.n, self.irreducible_polynomial)
-            )
 
         # We use a variant of the *extended Euclidean algorithm* to find the
         # multiplicative inverse.
@@ -249,6 +246,18 @@ class GF256(_GF256Base):
         assert old_r == 1  # old_r is the gcd
         return self.__class__(abs(old_t))
 
+    if _speedups:
+        doc = _multiplicative_inverse.__doc__
+
+        def _multiplicative_inverse(self):  # noqa
+            if self.n == 0:
+                raise ZeroDivisionError()
+            return self.__class__(
+                _speedups.modinverse(self.n, self.irreducible_polynomial)
+            )
+        _multiplicative_inverse.__doc__ = doc
+        del doc
+
 
 class GF256LT(_GF256Base):
     """
@@ -274,8 +283,6 @@ class GF256LT(_GF256Base):
         if isinstance(other, GF256LT):
             if self.n == 0 or other.n == 0:
                 return self.__class__(0)
-            if _speedups:
-                return self.__class__(_speedups.polymuldmodlt(self.n, other.n))
             return self.__class__(self.exponentiation_table[
                 (
                     self.logarithm_table[self.n - 1]
@@ -284,13 +291,25 @@ class GF256LT(_GF256Base):
             ])
         return NotImplemented
 
+    if _speedups:
+        def __mul__(self, other):  # noqa
+            if isinstance(other, GF256LT):
+                if self.n == 0 or other.n == 0:
+                    return self.__class__(0)
+                return self.__class__(_speedups.polymuldmodlt(self.n, other.n))
+            return NotImplemented
+
     def _multiplicative_inverse(self):
         if self.n == 0:
             raise ZeroDivisionError()
-        if _speedups:
-            return self.__class__(_speedups.modinverselt(self.n))
         return self.__class__(
             self.exponentiation_table[
                 (-self.logarithm_table[self.n - 1]) % 255
             ]
         )
+
+    if _speedups:
+        def _multiplicative_inverse(self):  # noqa
+            if self.n == 0:
+                raise ZeroDivisionError()
+            return self.__class__(_speedups.modinverselt(self.n))

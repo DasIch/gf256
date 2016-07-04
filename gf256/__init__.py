@@ -304,7 +304,7 @@ class GF256LT(_GF256Base):
             if isinstance(other, GF256LT):
                 if self.n == 0 or other.n == 0:
                     return self.__class__(0)
-                return self.__class__(_speedups.polymuldmodlt(self.n, other.n))
+                return self.__class__(_speedups.polymulmodlt(self.n, other.n))
             return NotImplemented
 
     def _multiplicative_inverse(self):

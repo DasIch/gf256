@@ -7,6 +7,8 @@
 """
 from cffi import FFI
 
+from gf256 import GF256LT
+
 
 ffibuilder = FFI()
 
@@ -15,9 +17,14 @@ ffibuilder.cdef("""
     uint32_t polymul(uint32_t a, uint32_t b);
     uint32_t polydiv(uint32_t divisor, uint32_t dividend);
     uint32_t modinverse(uint32_t n, uint32_t modulus);
+
+    uint32_t polymuldmodlt(uint32_t a, uint32_t b);
 """)
 
 ffibuilder.set_source('gf256._speedups', """
+    static uint32_t EXPONENTIATION_TABLE[255] = {%(exponentiation_table)s};
+    static uint32_t LOGARITHM_TABLE[255] = {%(logarithm_table)s};
+
     uint32_t polymulmod(uint32_t a, uint32_t b, uint32_t modulus) {
         uint32_t product = 0;
         int i;
@@ -77,7 +84,16 @@ ffibuilder.set_source('gf256._speedups', """
         }
         return old_t;
     }
-""")
+
+    uint32_t polymuldmodlt(uint32_t a, uint32_t b) {
+        return EXPONENTIATION_TABLE[
+            (LOGARITHM_TABLE[a - 1] + LOGARITHM_TABLE[b - 1]) %% 255
+        ];
+    }
+""" % {
+    'exponentiation_table': ', '.join(map(str, GF256LT.exponentiation_table)),
+    'logarithm_table': ', '.join(map(str, GF256LT.logarithm_table)),
+})
 
 
 if __name__ == '__main__':

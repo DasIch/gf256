@@ -274,6 +274,8 @@ class GF256LT(_GF256Base):
         if isinstance(other, GF256LT):
             if self.n == 0 or other.n == 0:
                 return self.__class__(0)
+            if _speedups:
+                return self.__class__(_speedups.polymuldmodlt(self.n, other.n))
             return self.__class__(self.exponentiation_table[
                 (
                     self.logarithm_table[self.n - 1]

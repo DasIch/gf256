@@ -11,27 +11,13 @@
 import timeit
 
 
-SETUP = '\n'.join([
-    'import random',
-    'from gf256 import GF256',
-    'a = GF256(random.randrange(256))',
-    'b = GF256(random.randrange(256))'
-])
-
-
-SETUP_NONZERO_B = '\n'.join([
-    'import random',
-    'from gf256 import GF256',
-    'a = GF256(random.randrange(256))',
-    'b = GF256(random.randrange(1, 256))'
-])
-
 REPEAT = 3
 NUMBER = 1000000
 
 
-def benchmark(stmt, setup=SETUP, repeat=REPEAT, number=NUMBER, **kwargs):
-    kwargs.update(stmt=stmt, setup=setup, repeat=REPEAT, number=number)
+def benchmark(stmt, **kwargs):
+    kwargs['stmt'] = stmt
+    number = kwargs.get('number', NUMBER)
     execution_time = min(timeit.repeat(**kwargs))
     time_per_operation = execution_time * 1e6 / number
     precision = 3
@@ -47,21 +33,45 @@ def benchmark(stmt, setup=SETUP, repeat=REPEAT, number=NUMBER, **kwargs):
     return '{:.{}} {}'.format(time_per_operation, precision, unit)
 
 
-def main():
+def benchmark_implementation(class_name, repeat=REPEAT, number=NUMBER):
+    setup = '\n'.join([
+        'import random',
+        'from gf256 import {class}',
+        'a = {class}(random.randrange(256))',
+        'b = {class}(random.randrange(256))'
+    ]).format(**{'class': class_name})
+    setup_nonzero_b = '\n'.join([
+        'import random',
+        'from gf256 import {class}',
+        'a = {class}(random.randrange(256))',
+        'b = {class}(random.randrange(1, 256))'
+    ]).format(**{'class': class_name})
     benchmarks = [
-        ('Addition', 'a + b', SETUP),
-        ('Subtraction', 'a - b', SETUP),
-        ('Multiplication', 'a * b', SETUP),
-        ('Division', 'a / b', SETUP_NONZERO_B)
+        ('Addition', 'a + b', setup),
+        ('Subtraction', 'a - b', setup),
+        ('Multiplication', 'a * b', setup),
+        ('Division', 'a / b', setup_nonzero_b)
     ]
-    max_label = max(len(label) for label, _, _ in benchmarks)
     for label, statement, setup in benchmarks:
-        time_per_operation = benchmark(statement)
-        print('{0}:{1} {2}'.format(
-            label,
-            ' ' * (max_label - len(label)),
-            time_per_operation
-        ))
+        execution_time = benchmark(
+            statement, setup=setup, repeat=repeat, number=number
+        )
+        yield label, execution_time
+
+
+def main():
+    implementations = ['GF256', 'GF256LT']
+    for implementation in implementations:
+        print('Benchmarking: {}'.format(implementation))
+        results = list(benchmark_implementation(implementation))
+        max_label_length = max(len(label) for label, _ in results)
+        for operation, execution_time in results:
+            print('{}: {} {}'.format(
+                operation,
+                ' ' * (max_label_length - len(operation)),
+                execution_time
+            ))
+        print()
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ import pytest
 from hypothesis import assume, given
 from hypothesis.strategies import integers
 
-from gf256 import GF256
+from gf256 import GF256, GF256LT
 
 
 def create_test_class(GF256):
@@ -48,7 +48,7 @@ def create_test_class(GF256):
 
         @given(gf256s)
         def test_repr_evals_to_equal_obj(self, a):
-            evaluated = eval(repr(a), {}, {'GF256': GF256})
+            evaluated = eval(repr(a), {}, {GF256.__name__: GF256})
             assert evaluated == a
 
         @given(gf256s, gf256s)
@@ -235,3 +235,25 @@ def create_test_class(GF256):
 
 
 TestGF256 = create_test_class(GF256)
+TestGF256LT = create_test_class(GF256LT)
+
+
+class TestImplementationEquality:
+    gf256s = integers(min_value=0, max_value=255)
+
+    @given(gf256s, gf256s)
+    def test_addition(self, a, b):
+        assert int(GF256(a) + GF256(b)) == int(GF256LT(a) + GF256LT(b))
+
+    @given(gf256s, gf256s)
+    def test_subtraction(self, a, b):
+        assert int(GF256(a) - GF256(b)) == int(GF256LT(a) - GF256LT(b))
+
+    @given(gf256s, gf256s)
+    def test_multiplication(self, a, b):
+        assert int(GF256(a) * GF256(b)) == int(GF256LT(a) * GF256LT(b))
+
+    @given(gf256s, gf256s)
+    def test_division(self, a, b):
+        assume(b != 0)
+        assert int(GF256(a) / GF256(b)) == int(GF256LT(a) / GF256LT(b))

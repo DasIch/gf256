@@ -69,6 +69,10 @@ API Reference
    :inherited-members:
    :members:
 
+.. autoclass:: gf256.GF256LT
+   :inherited-members:
+   :members:
+
 
 Additional Information
 ----------------------

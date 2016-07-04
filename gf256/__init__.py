@@ -5,6 +5,7 @@
     :copyright: 2016 by Daniel Neuhäuser
     :license: BSD, see LICENSE.rst for details
 """
+from operator import itemgetter
 try:
     from gf256._speedups import lib as _speedups
 except ImportError:
@@ -97,6 +98,10 @@ class _GF256Base:
             for _ in range(int(other)):
                 power *= self
             return power
+
+    def __truediv__(self, other):
+        if isinstance(other, _GF256Base):
+            return self * other._multiplicative_inverse()
         return NotImplemented
 
     def __int__(self):
@@ -179,11 +184,6 @@ class GF256(_GF256Base):
             return self.__class__(product)
         return NotImplemented
 
-    def __truediv__(self, other):
-        if isinstance(other, GF256):
-            return self * other._multiplicative_inverse()
-        return NotImplemented
-
     def _multiplicative_inverse(self):
         """
         Returns the multiplicative inverse that is the element that, if
@@ -248,3 +248,45 @@ class GF256(_GF256Base):
         # irreducible.
         assert old_r == 1  # old_r is the gcd
         return self.__class__(abs(old_t))
+
+
+class GF256LT(_GF256Base):
+    """
+    Represents an element in `GF(2 ** 8)`, implemented using lookup tables for
+    fast multiplication and division.
+
+    Works like :class:`GF256`.
+    """
+
+    generator = 3
+    exponentiation_table = [
+        int(GF256(3) ** GF256(i)) for i in range(255)
+    ]
+    logarithm_table = [
+        logarithm
+        for logarithm, exponent in sorted(
+            enumerate(exponentiation_table, 0),
+            key=itemgetter(1)
+        )
+    ]
+
+    def __mul__(self, other):
+        if isinstance(other, GF256LT):
+            if self.n == 0 or other.n == 0:
+                return self.__class__(0)
+            return self.__class__(self.exponentiation_table[
+                (
+                    self.logarithm_table[self.n - 1]
+                    + self.logarithm_table[other.n - 1]
+                ) % 255
+            ])
+        return NotImplemented
+
+    def _multiplicative_inverse(self):
+        if self.n == 0:
+            raise ZeroDivisionError()
+        return self.__class__(
+            self.exponentiation_table[
+                (-self.logarithm_table[self.n - 1]) % 255
+            ]
+        )

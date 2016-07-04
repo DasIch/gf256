@@ -5,7 +5,7 @@ Changelog
 Version 0.2.0
 -------------
 
-- Implement the `**` operator.
+- Added support for the `**` operator.
 - Added :class:`gf256.GF256LT`.
 
 

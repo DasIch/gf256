@@ -186,6 +186,14 @@ class GF256(_GF256Base):
                 ))
             return NotImplemented
 
+    if _speedups:
+        def __truediv__(self, other):
+            if other.n == 0:
+                raise ZeroDivisionError()
+            return self.__class__(_speedups.polydivmod(
+                self.n, other.n, self.irreducible_polynomial
+            ))
+
     def _multiplicative_inverse(self):
         """
         Returns the multiplicative inverse that is the element that, if

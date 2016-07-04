@@ -17,6 +17,7 @@ ffibuilder.cdef("""
     uint32_t polymul(uint32_t a, uint32_t b);
     uint32_t polydiv(uint32_t divisor, uint32_t dividend);
     uint32_t modinverse(uint32_t n, uint32_t modulus);
+    uint32_t polydivmod(uint32_t a, uint32_t b, uint32_t modulus);
 
     uint32_t polymuldmodlt(uint32_t a, uint32_t b);
     uint32_t modinverselt(uint32_t n);
@@ -84,6 +85,10 @@ ffibuilder.set_source('gf256._speedups', """
             old_t = temp;
         }
         return old_t;
+    }
+
+    uint32_t polydivmod(uint32_t a, uint32_t b, uint32_t modulus) {
+        return polymulmod(a, modinverse(b, modulus), modulus);
     }
 
     uint32_t polymuldmodlt(uint32_t a, uint32_t b) {

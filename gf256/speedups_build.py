@@ -21,6 +21,7 @@ ffibuilder.cdef("""
 
     uint32_t polymulmodlt(uint32_t a, uint32_t b);
     uint32_t modinverselt(uint32_t n);
+    uint32_t polydivmodlt(uint32_t a, uint32_t b);
 """)
 
 ffibuilder.set_source('gf256._speedups', """
@@ -92,6 +93,9 @@ ffibuilder.set_source('gf256._speedups', """
     }
 
     uint32_t polymulmodlt(uint32_t a, uint32_t b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
         return EXPONENTIATION_TABLE[
             (LOGARITHM_TABLE[a - 1] + LOGARITHM_TABLE[b - 1]) %% 255
         ];
@@ -99,6 +103,10 @@ ffibuilder.set_source('gf256._speedups', """
 
     uint32_t modinverselt(uint32_t n) {
         return EXPONENTIATION_TABLE[(255 - LOGARITHM_TABLE[n - 1]) %% 255];
+    }
+
+    uint32_t polydivmodlt(uint32_t a, uint32_t b) {
+        return polymulmodlt(a, modinverselt(b));
     }
 """ % {
     'exponentiation_table': ', '.join(map(str, GF256LT.exponentiation_table)),

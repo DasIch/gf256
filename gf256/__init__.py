@@ -302,9 +302,14 @@ class GF256LT(_GF256Base):
     if _speedups:
         def __mul__(self, other):  # noqa
             if isinstance(other, GF256LT):
-                if self.n == 0 or other.n == 0:
-                    return self.__class__(0)
                 return self.__class__(_speedups.polymulmodlt(self.n, other.n))
+            return NotImplemented
+
+        def __truediv__(self, other):
+            if isinstance(other, GF256LT):
+                if other.n == 0:
+                    raise ZeroDivisionError()
+                return self.__class__(_speedups.polydivmodlt(self.n, other.n))
             return NotImplemented
 
     def _multiplicative_inverse(self):

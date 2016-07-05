@@ -29,8 +29,6 @@ def _polymul(a, b):
         b <<= 1
         a >>= 1
     return product
-if _speedups:
-    _polymul = _speedups.polymul  # noqa
 
 
 def _polydiv(dividend, divisor):

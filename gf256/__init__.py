@@ -184,7 +184,6 @@ class GF256(_GF256Base):
                 ))
             return NotImplemented
 
-    if _speedups:
         def __truediv__(self, other):
             if other.n == 0:
                 raise ZeroDivisionError()

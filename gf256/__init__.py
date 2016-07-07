@@ -38,9 +38,6 @@ def _polydiv(dividend, divisor):
     if divisor == 0:
         raise ZeroDivisionError()
 
-    if _speedups is not None:
-        return _speedups.polydiv(dividend, divisor)
-
     quotient = 0
     remainder = dividend
     while remainder.bit_length() >= divisor.bit_length():
@@ -254,18 +251,6 @@ class GF256(_GF256Base):
         assert old_r == 1  # old_r is the gcd
         return self.__class__(abs(old_t))
 
-    if _speedups:
-        doc = _multiplicative_inverse.__doc__
-
-        def _multiplicative_inverse(self):  # noqa
-            if self.n == 0:
-                raise ZeroDivisionError()
-            return self.__class__(
-                _speedups.modinverse(self.n, self.irreducible_polynomial)
-            )
-        _multiplicative_inverse.__doc__ = doc
-        del doc
-
 
 class GF256LT(_GF256Base):
     """
@@ -320,9 +305,3 @@ class GF256LT(_GF256Base):
                 (-self.logarithm_table[self.n - 1]) % 255
             ]
         )
-
-    if _speedups:
-        def _multiplicative_inverse(self):  # noqa
-            if self.n == 0:
-                raise ZeroDivisionError()
-            return self.__class__(_speedups.modinverselt(self.n))

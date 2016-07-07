@@ -9,7 +9,15 @@ import pytest
 from hypothesis import assume, given
 from hypothesis.strategies import integers
 
-from gf256 import GF256, GF256LT
+from gf256 import GF256, GF256LT, _polydiv
+
+
+def test_polydiv():
+    # _polydiv should never be called with 0 as a divisor in the regular code,
+    # so the case won't be covered by any other tests. We do nevertheless want
+    # the right thing to happen here, if something goes wrong.
+    with pytest.raises(ZeroDivisionError):
+        _polydiv(1, 0)
 
 
 def create_test_class(GF256):

@@ -234,6 +234,10 @@ def create_test_class(GF256):
             with pytest.raises(TypeError):
                 GF256(1) ** 1
 
+        def test_truediv_with_different_type(self):
+            with pytest.raises(TypeError):
+                GF256(1) / 1
+
     TestGF256.__name__ = 'Test{}'.format(GF256.__name__)
     return TestGF256
 

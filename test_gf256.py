@@ -230,6 +230,18 @@ def create_test_class(GF256):
         def test_int_coercion(self, a):
             assert int(GF256(a)) == a
 
+        def test_addition_with_different_type(self):
+            with pytest.raises(TypeError):
+                GF256(1) + 1
+
+        def test_subtraction_with_different_type(self):
+            with pytest.raises(TypeError):
+                GF256(1) - 1
+
+        def test_multiplication_with_different_type(self):
+            with pytest.raises(TypeError):
+                GF256(1) * 1
+
         def test_pow_with_different_type(self):
             with pytest.raises(TypeError):
                 GF256(1) ** 1

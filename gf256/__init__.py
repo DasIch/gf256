@@ -96,6 +96,7 @@ class _GF256Base:
             for _ in range(int(other)):
                 power *= self
             return power
+        return NotImplemented
 
     def __truediv__(self, other):
         if isinstance(other, _GF256Base):

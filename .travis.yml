@@ -21,7 +21,7 @@ install:
     elif [ "$REQUIREMENTS" == "dev" ]; then
       pip install -e hg+https://bitbucket.org/cffi/cffi#egg=cffi;
     fi
-    pip install codecov
+  - pip install codecov
 
 
 script:

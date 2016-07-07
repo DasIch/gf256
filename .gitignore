@@ -8,3 +8,5 @@ docs/_build/
 *.c
 *.so
 *.o
+.coverage
+htmlcov/

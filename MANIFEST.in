@@ -4,6 +4,7 @@ include tox.ini
 include .isort.cfg
 include *.py # test_*.py
 include *.yml
+include .coveragerc
 
 recursive-include docs *.py
 recursive-include docs *.rst

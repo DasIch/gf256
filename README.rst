@@ -7,6 +7,9 @@ GF256
 .. image:: https://ci.appveyor.com/api/projects/status/l6n5t78x6op8lqug?svg=true
    :target: https://ci.appveyor.com/project/DasIch/gf256
 
+.. image:: https://codecov.io/gh/DasIch/gf256/coverage.svg
+   :target: https://codecov.io/gh/DasIch/gf256/coverage.svg
+
 .. image:: https://readthedocs.org/projects/gf256/badge/?version=latest
    :target: http://gf256.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status

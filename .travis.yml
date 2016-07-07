@@ -21,13 +21,17 @@ install:
     elif [ "$REQUIREMENTS" == "dev" ]; then
       pip install -e hg+https://bitbucket.org/cffi/cffi#egg=cffi;
     fi
+  - pip install codecov
 
 
 script:
-  - py.test
+  - coverage run --module pytest
   - python setup.py check --strict --metadata --restructuredtext
   - check-manifest
   - sphinx-build -W -b html docs docs/_build/html
   - sphinx-build -W -b doctest docs docs/_build/doctest
   - flake8 .
   - isort --check-only --diff --recursive .
+
+after_success:
+  - codecov

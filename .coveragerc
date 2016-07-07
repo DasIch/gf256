@@ -1,0 +1,12 @@
+[run]
+branch = True
+omit = gf256/speedups_build.py
+source = gf256
+
+[paths]
+source =
+  gf256
+  .tox/*/lib/python*/site-packages/gf256
+
+[report]
+show_missing = True
